@@ -1,22 +1,69 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Image, KeyboardAvoidingView, ScrollView } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, KeyboardAvoidingView, ScrollView } from 'react-native';
+import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
+import Constants from 'expo-constants';
+import { useRouter } from 'expo-router';
 
 const Register = () => {
+    const [name, setName] = useState('');
     const [cpassword, setCPassword] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
 
-    const handleRegister = () => {
-        // Handle registration logic here
-        console.log('CPassword:', cpassword);
-        console.log('Password:', password);
-        console.log('Email:', email);
+    // Get the API URL from environment variables
+    const apiUrl = Constants.expoConfig?.extra?.apiUrl;
+
+    // Get the router instance to navigate programmatically
+    const router = useRouter();
+
+    const handleRegister = async () => {
+        if (password !== cpassword) {
+            Alert.alert('Error', 'Passwords do not match');
+            return;
+        }
+
+        try {
+            // Send registration data to backend API
+            const response = await axios.post(`${apiUrl}/api/auth/register`, {
+                name,
+                phone,
+                email,
+                password,
+            });
+
+            if (response.status === 201) {
+                const { accessToken, refreshToken } = response.data.data;
+
+                // Store tokens securely as strings
+                await SecureStore.setItemAsync('accessToken', String(accessToken), { keychainAccessible: SecureStore.WHEN_UNLOCKED });
+                await SecureStore.setItemAsync('refreshToken', String(refreshToken), { keychainAccessible: SecureStore.WHEN_UNLOCKED });
+
+                Alert.alert('Success', 'Registration successful');
+
+                // Navigate to the Home screen using router from expo-router
+                router.push('/');  // Assuming your Home screen is at the root path
+            } else {
+                Alert.alert('Error', 'Something went wrong');
+            }
+        } catch (error) {
+            console.error('Registration Error:', error);
+            Alert.alert('Error', 'Unable to register. Please try again later.');
+        }
     };
 
     return (
         <KeyboardAvoidingView style={styles.container} behavior="padding">
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <Text style={styles.title}>Register</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Name"
+                    placeholderTextColor="#888"
+                    value={name}
+                    onChangeText={setName}
+                />
                 <TextInput
                     style={styles.input}
                     placeholder="Email"
@@ -34,10 +81,18 @@ const Register = () => {
                 />
                 <TextInput
                     style={styles.input}
-                    placeholder="Confirm password"
+                    placeholder="Confirm Password"
                     placeholderTextColor="#888"
                     value={cpassword}
                     onChangeText={setCPassword}
+                    secureTextEntry
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder="Phone Number"
+                    placeholderTextColor="#888"
+                    value={phone}
+                    onChangeText={setPhone}
                 />
                 <Button title="Submit" onPress={handleRegister} />
             </ScrollView>
@@ -54,12 +109,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 20,
-    },
-    logo: {
-        width: 90,
-        height: 90,
-        marginBottom: 20,
-        resizeMode: 'contain',
     },
     title: {
         fontSize: 24,

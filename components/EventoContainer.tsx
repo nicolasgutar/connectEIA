@@ -1,6 +1,6 @@
 // File: components/EventoContainer.tsx
 import React from 'react';
-import { View, Image, Text, StyleSheet } from 'react-native';
+import { View, Image, Text, StyleSheet, Alert } from 'react-native';
 import { Evento } from '@/data/eventos';
 import ConfirmButton from "@/components/ConfirmButton";
 
@@ -9,6 +9,10 @@ interface EventoContainerProps {
 }
 
 const EventoContainer: React.FC<EventoContainerProps> = ({ evento }) => {
+    const handleConfirm = () => {
+        Alert.alert('Asistencia confirmada exitosamente');
+    };
+
     return (
         <View style={styles.container}>
             <Image source={{ uri: evento.Image_url }} style={styles.image} />
@@ -17,7 +21,7 @@ const EventoContainer: React.FC<EventoContainerProps> = ({ evento }) => {
                 <Text style={styles.subtitle}>{evento.Location}</Text>
                 <Text style={styles.subtitle}>{evento.Hour}</Text>
                 <Text style={styles.subtitle}>{evento.Date.toLocaleDateString()}</Text>
-                <ConfirmButton Title={"Confirmar"} Redirect={""} />
+                <ConfirmButton Title={"Confirmar"} onPress={handleConfirm} />
             </View>
         </View>
     );

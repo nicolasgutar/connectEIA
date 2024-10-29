@@ -26,7 +26,7 @@ const MenuButton2: React.FC<MenuButton2Props> = ({ Title, Redirect }) => {
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: '#fff',
+        backgroundColor: '#044a59',
         borderRadius: 50, // Half of the height to make it a cylinder
         alignItems: 'center',
         justifyContent: 'center',
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     buttonText: {
-        color: '#044a59',
+        color: '#fff',
         fontSize: 20,
         fontWeight: 'bold',
     },

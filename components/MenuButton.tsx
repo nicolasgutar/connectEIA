@@ -1,22 +1,22 @@
 // File: components/MenuButton.tsx
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import React from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useRouter, Href } from 'expo-router'; // Import Href
 
 interface MenuButtonProps {
     Title: string;
-    Redirect: string;
+    Redirect: Href; // Use Href type
 }
 
 const MenuButton: React.FC<MenuButtonProps> = ({ Title, Redirect }) => {
-    const navigation = useNavigation();
+    const router = useRouter(); // Initialize router
     const screenWidth = Dimensions.get('window').width;
     const buttonWidth = screenWidth * 0.5;
 
     return (
         <TouchableOpacity
             style={[styles.button, { width: buttonWidth, height: buttonWidth * 0.4 }]}
-            onPress={() => navigation.navigate(Redirect)}
+            onPress={() => router.push(Redirect)} // Use router.push
         >
             <Text style={styles.buttonText}>{Title}</Text>
         </TouchableOpacity>
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: 'white',
-        fontSize: 20, // Increased font size
+        fontSize: 20,
         fontWeight: 'bold',
     },
 });

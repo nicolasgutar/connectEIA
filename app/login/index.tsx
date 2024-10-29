@@ -1,20 +1,56 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Image, KeyboardAvoidingView, ScrollView, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, KeyboardAvoidingView, ScrollView, TouchableOpacity } from 'react-native';
+import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
+import Constants from 'expo-constants';
+import { useRouter } from 'expo-router';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const navigation = useNavigation();
 
-    const handleLogin = () => {
-        // Handle login logic here
-        console.log('Username:', email);
-        console.log('Password:', password);
+    // Get the API URL from environment variables
+    const apiUrl = Constants.expoConfig?.extra?.apiUrl;
+
+    // Get the router instance to navigate programmatically
+    const router = useRouter();
+
+    const handleLogin = async () => {
+        if (!email || !password) {
+            Alert.alert('Error', 'Please enter both email and password');
+            return;
+        }
+
+        try {
+            // Send login data to backend API
+            const response = await axios.post(`${apiUrl}/api/auth/login`, {
+                email,
+                password,
+            });
+
+            if (response.status === 201) {
+                const { accesToken, refreshToken } = response.data.data;
+                console.log("response.data.data: ", response.data.data);
+                // Store tokens securely as strings
+                console.log('Access Token:', accesToken);
+                await SecureStore.setItemAsync('accessToken', String(accesToken), { keychainAccessible: SecureStore.WHEN_UNLOCKED });
+                await SecureStore.setItemAsync('refreshToken', String(refreshToken), { keychainAccessible: SecureStore.WHEN_UNLOCKED });
+
+                Alert.alert('Success', 'Login successful');
+
+                // Navigate to the Home screen using router from expo-router
+                router.push('/');  // Assuming your Home screen is at the root path
+            } else {
+                Alert.alert('Error', 'Invalid credentials, please try again');
+            }
+        } catch (error) {
+            console.error('Login Error:', error);
+            Alert.alert('Error', 'Unable to login. Please try again later.');
+        }
     };
 
     const handleRegisterRedirect = () => {
-        navigation.navigate('register');
+        router.push('/register'); // Navigate to the registration page
     };
 
     return (

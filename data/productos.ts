@@ -1,12 +1,21 @@
 // File: data/productos.ts
 
 export interface Producto {
-    Name: string;
-    Description: string;
-    Color: string;
-    Price: number;
-    ContactInfo: string;
-    Image_url: string;
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    new: boolean;
+    negotiable: boolean;
+    images: string[];
+    last_update: string;
+    created_by: {
+        id: number;
+        name: string;
+        email: string;
+        phone: string;
+        roles: string[];
+    };
 }
 
 export const productos: Producto[] = [

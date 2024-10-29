@@ -3,8 +3,12 @@ import { Text, View, Image } from "react-native";
 import MenuButton from "@/components/MenuButton";
 import MenuButton2 from "@/components/MenuButton2";
 import LogoUniversidad from "@/assets/images/LogoUniversidad.png";
+import MenuButton3 from "@/components/MenuButton3";
+
+
 
 export default function Index() {
+
     return (
         <View
             style={{
@@ -44,13 +48,13 @@ export default function Index() {
                         Connect EIA
                     </Text>
                 </View>
-                <MenuButton Title={"Eventos"} Redirect="(wnavb)/eventos/index" />
-                <MenuButton Title="Reservas" Redirect="(wnavb)/reservas/index" />
-                <MenuButton Title="Marketplace" Redirect="(wnavb)/marketplace/index" />
+                <MenuButton Title={"Eventos"} Redirect="/eventos" />
+                <MenuButton Title="Reservas" Redirect="/reservas" />
+                <MenuButton Title="Marketplace" Redirect="/marketplace" />
             </View>
             <View>
-                <MenuButton2 Title="Login" Redirect="login/index" />
-                <MenuButton2 Title="Sobre ConnectEIA" Redirect="(wnavb)/sobre" />
+                <MenuButton3 Title="Login" Redirect="/login" />
+                <MenuButton2 Title="Sobre ConnectEIA" Redirect="/sobre" />
             </View>
         </View>
     );

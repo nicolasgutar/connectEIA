@@ -2,24 +2,21 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
 import { Producto } from '@/data/productos';
-import ConfirmButton from "@/components/ConfirmButton";
 
 interface ProductoContainerProps {
     producto: Producto;
 }
 
 const ProductoContainer: React.FC<ProductoContainerProps> = ({ producto }) => {
-    const imageSource = { uri: producto.Image_url };
+    const imageSource = { uri: producto.images[0] };
 
     return (
         <View style={styles.container}>
             <Image source={imageSource} style={styles.image} />
-            <Text style={styles.title}>{producto.Name}</Text>
-            <Text style={styles.description}>{producto.Description}</Text>
-            <Text style={styles.color}>Color: {producto.Color}</Text>
-            <Text style={styles.price}>Price: ${producto.Price}</Text>
-            <Text style={styles.contact}>Contact: {producto.ContactInfo}</Text>
-            <ConfirmButton Title={"Comprar"} Redirect={"/comprar"} />
+            <Text style={styles.title}>{producto.name}</Text>
+            <Text style={styles.description}>{producto.description}</Text>
+            <Text style={styles.price}>Price: ${producto.price}</Text>
+            <Text style={styles.price}>Contacto: {producto.created_by.phone}</Text>
         </View>
     );
 };
@@ -51,15 +48,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         color: '#000',
     },
-    color: {
-        marginBottom: 5,
-        color: '#000',
-    },
     price: {
-        marginBottom: 5,
-        color: '#000',
-    },
-    contact: {
         marginBottom: 5,
         color: '#000',
     },
